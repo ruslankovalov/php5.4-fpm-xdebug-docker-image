@@ -80,12 +80,12 @@ RUN echo "[xdebug]" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.idekey=\"php-storm\"" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.remote_autostart=on" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.remote_enable=on" >> /opt/php-5.4.3/lib/php.ini \
-    && echo "xdebug.remote_connect_back=on" >> /opt/php-5.4.3/lib/php.ini \
-#    && echo "xdebug.xdebug.remote_host=192.168.88.214" >> /opt/php-5.4.3/lib/php.ini \
-#    && echo "xdebug.remote_port=9002" >> /opt/php-5.4.3/lib/php.ini \
+    && echo "xdebug.remote_host=192.168.88.214" >> /opt/php-5.4.3/lib/php.ini \
+    && echo "xdebug.remote_port=9002" >> /opt/php-5.4.3/lib/php.ini \
     && mkdir /var/log/xdebug \
     && touch /var/log/xdebug/remote_log.log \
-    && echo "xdebug.remote_log=/var/log/xdebug/" >> /opt/php-5.4.3/lib/php.ini
+    && chown www-data:www-data /var/log/xdebug/remote_log.log \
+    && echo "xdebug.remote_log=/var/log/xdebug/remote_log.log" >> /opt/php-5.4.3/lib/php.ini
 
 RUN mkdir /var/www
 WORKDIR /var/www
