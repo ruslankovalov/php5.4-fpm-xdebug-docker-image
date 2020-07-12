@@ -53,6 +53,9 @@ RUN ln -s /opt/php-5.4.3/bin/php /usr/bin/php \
     && cp /opt/php-5.4.3/etc/php-fpm.conf.default /opt/php-5.4.3/etc/php-fpm.conf \
     && echo '[global]' >> /opt/php-5.4.3/etc/php-fpm.conf \
     && echo 'daemonize = no' >> /opt/php-5.4.3/etc/php-fpm.conf \
+    && echo 'error_log = /proc/self/fd/2' >> /opt/php-5.4.3/etc/php-fpm.conf \
+    && echo '[www]' >> /opt/php-5.4.3/etc/php-fpm.conf \
+    && echo 'access.log = /proc/self/fd/2' >> /opt/php-5.4.3/etc/php-fpm.conf \
     && sed -i "s/listen = 127.0.0.1:9000/listen = 9000/" /opt/php-5.4.3/etc/php-fpm.conf
 
 WORKDIR /
@@ -76,7 +79,13 @@ RUN echo "[xdebug]" >> /opt/php-5.4.3/lib/php.ini \
     && echo "zend_extension=\"/usr/lib/php/5.4/xdebug.so\"" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.idekey=\"php-storm\"" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.remote_autostart=on" >> /opt/php-5.4.3/lib/php.ini \
-    && echo "xdebug.remote_enable=on" >> /opt/php-5.4.3/lib/php.ini
+    && echo "xdebug.remote_enable=on" >> /opt/php-5.4.3/lib/php.ini \
+    && echo "xdebug.remote_connect_back=on" >> /opt/php-5.4.3/lib/php.ini \
+#    && echo "xdebug.xdebug.remote_host=192.168.88.214" >> /opt/php-5.4.3/lib/php.ini \
+#    && echo "xdebug.remote_port=9002" >> /opt/php-5.4.3/lib/php.ini \
+    && mkdir /var/log/xdebug \
+    && touch /var/log/xdebug/remote_log.log \
+    && echo "xdebug.remote_log=/var/log/xdebug/" >> /opt/php-5.4.3/lib/php.ini
 
 RUN mkdir /var/www
 WORKDIR /var/www
