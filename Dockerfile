@@ -75,13 +75,17 @@ RUN mkdir /usr/lib/php \
     && cp /xdebug-XDEBUG_2_4_1/modules/xdebug.so /usr/lib/php/5.4/xdebug.so
 
 #Xdebug config
+ARG XDEBUG_REMOTE_HOST="localhost"
+ARG XDEBUG_REMOTE_PORT=9000
+ARG XDEBUG_REMOTE_AUTOSTART="off"
+
 RUN echo "[xdebug]" >> /opt/php-5.4.3/lib/php.ini \
     && echo "zend_extension=\"/usr/lib/php/5.4/xdebug.so\"" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.idekey=\"php-storm\"" >> /opt/php-5.4.3/lib/php.ini \
-    && echo "xdebug.remote_autostart=on" >> /opt/php-5.4.3/lib/php.ini \
     && echo "xdebug.remote_enable=on" >> /opt/php-5.4.3/lib/php.ini \
-    && echo "xdebug.remote_host=192.168.88.214" >> /opt/php-5.4.3/lib/php.ini \
-    && echo "xdebug.remote_port=9002" >> /opt/php-5.4.3/lib/php.ini \
+    && echo "xdebug.remote_host=$XDEBUG_REMOTE_HOST" >> /opt/php-5.4.3/lib/php.ini \
+    && echo "xdebug.remote_port=$XDEBUG_REMOTE_PORT" >> /opt/php-5.4.3/lib/php.ini \
+    && echo "xdebug.remote_autostart=$XDEBUG_REMOTE_AUTOSTART" >> /opt/php-5.4.3/lib/php.ini \
     && mkdir /var/log/xdebug \
     && touch /var/log/xdebug/remote_log.log \
     && chown www-data:www-data /var/log/xdebug/remote_log.log \
