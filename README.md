@@ -1,9 +1,10 @@
-##PHP5.4.3 DOCKERFILE (fpm with xdebug)
+## PHP5.4.3 DOCKERFILE (fpm with xdebug)
 
 This is docker image for local development for project that runs on php 5.4.3
 
 ### Usage
-####Build with 
+
+#### Build with 
     
     docker image build  ./ \
     --build-arg XDEBUG_REMOTE_HOST={{REMOTE_HOST}} \
@@ -13,7 +14,7 @@ This is docker image for local development for project that runs on php 5.4.3
     
 If build arguments are not supplied, default values of 'localhost', '9000' and 'off' will be used
 
-####Run with
+#### Run with
 
     docker container run --rm --name php-fpm \
     -p {{FREE_LOCAL_PORT_FOR_FASTCGI}}:9000 \
