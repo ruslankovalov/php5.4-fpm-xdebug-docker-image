@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-#install all necessary libs for php compilation
+# Install all necessary libs for php compilation
 RUN apt-get update \
     && apt-get install dialog apt-utils -y \
     && apt-get install build-essential -y \
@@ -25,7 +25,7 @@ RUN apt-get update \
     && apt-get update \
     && apt-get upgrade -y
 
-#Download and compile php
+# Download and compile php
 RUN wget http://museum.php.net/php5/php-5.4.3.tar.bz2 \
     && tar -vxf php-5.4.3.tar.bz2
 WORKDIR /php-5.4.3
@@ -37,16 +37,15 @@ RUN ./configure --prefix=/opt/php-5.4.3 --with-pdo-pgsql --with-zlib-dir --with-
      --with-openssl --with-fpm-user=www-data --with-fpm-group=www-data --with-libdir=/lib --enable-ftp --with-imap \
       -with-imap-ssl --with-kerberos --with-gettext --with-xmlrpc --with-xsl --enable-fpm --enable-xdebug
 
-#This patch is applied not to have errors with libxml2. It throws errors after version 2.9.0 and this patch is applied
-#not to have those errors. Feel free to comment out two lines below and experience those errors
+# This patch is applied not to have errors with libxml2. It throws errors after version 2.9.0 and this patch is applied
+# not to have those errors. Feel free to comment out two lines below and experience those errors
 COPY somepatchbeforemake somepatchbeforemake
 RUN patch -p0 -i somepatchbeforemake
 
 RUN make \
-#    && make test \
     && make install
 
-#create bin symlinks and congigure a bit
+# Create bin symlinks for php and congigure php-fpm
 RUN ln -s /opt/php-5.4.3/bin/php /usr/bin/php \
     && ln -s /opt/php-5.4.3/sbin/php-fpm /usr/bin/php-fpm \
     && cp php.ini-development /opt/php-5.4.3/lib/php.ini \
@@ -91,12 +90,14 @@ RUN echo "[xdebug]" >> /opt/php-5.4.3/lib/php.ini \
     && chown www-data:www-data /var/log/xdebug/remote_log.log \
     && echo "xdebug.remote_log=/var/log/xdebug/remote_log.log" >> /opt/php-5.4.3/lib/php.ini
 
+#this is just for convenience
+RUN apt-get install vim -y \
+    && apt-get install htop
+
+#Configuring php
+RUN sed -i "s/;date\.timezone =/date.timezone = UTC/" /opt/php-5.4.3/lib/php.ini
+
 RUN mkdir /var/www
 WORKDIR /var/www
-
-#RUN touch endless.sh \
-#    && echo "#/bin/bash" > endless.sh \
-#    && echo "while true; do echo 1; sleep 2; done" >> endless.sh
-#CMD ["/bin/bash","/endless.sh"]
 CMD ["php-fpm"]
 EXPOSE 9000
